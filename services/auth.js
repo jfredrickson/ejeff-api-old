@@ -20,11 +20,11 @@ const localStrategyOptions = { usernameField: "email" }
 const localLogin = new LocalStrategy(localStrategyOptions, (email, password, done) => {
   User.findOne({ email: email }, (err, user) => {
     if (err) return done(err)
-    if (!user) return done(null, false, { error: "Invalid username or password." })
+    if (!user) return done(null, false, { message: "Invalid username or password." })
 
     user.comparePassword(password, (err, match) => {
       if (err) return done(err)
-      if (!match) return done(null, false, { error: "Invalid username or password." })
+      if (!match) return done(null, false, { message: "Invalid username or password." })
       return done(null, user)
     })
   })
