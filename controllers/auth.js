@@ -14,14 +14,14 @@ exports.register = (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
 
-  if (!email) return res.status(422).send({ message: "You must provide an email address." })
-  if (!password) return res.status(422).send({ message: "You must provide a password." })
+  if (!email) return res.status(422).json({ message: "You must provide an email address." })
+  if (!password) return res.status(422).json({ message: "You must provide a password." })
 
   User.findOne({ email: email }, (err, existingUser) => {
     if (err) return next(err)
 
     if (existingUser) {
-      return res.status(409).send({ error: "That email address is already registered." })
+      return res.status(409).json({ message: "That email address is already registered." })
     }
 
     let user = new User({
@@ -31,7 +31,7 @@ exports.register = (req, res, next) => {
 
     user.save(function (err, result) {
       if (err) {
-        res.status(500).send({ message: err.message })
+        res.status(500).json({ message: err.message })
         return next()
       }
 

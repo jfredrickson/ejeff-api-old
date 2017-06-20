@@ -10,7 +10,7 @@ exports.requireLogin = passport.authenticate("local", { session: false })
 
 exports.requireAdminRole = (req, res, next) => {
   if (req.user.role !== "Admin") {
-    res.sendStatus(401)
+    res.status(401).json({ message: "You must be an administrator to perform this function." })
   } else {
     next()
   }

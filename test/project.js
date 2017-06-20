@@ -1,15 +1,29 @@
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 const Project = require("../models/project")
+const User = require("../models/user")
 const app = require("../app")
+const jwt = require("jsonwebtoken")
+const config = require("../config/config")
 
 let should = chai.should()
 chai.use(chaiHttp)
 
 describe("Projects", () => {
+  let adminUser
+
   beforeEach((done) => {
     Project.remove({}, (err) => {
       done()
+    })
+  })
+
+  beforeEach((done) => {
+    User.remove({}, (err) => {
+      User.create({ email: "user1@example.com", password: "user", role: "Admin" }, (err, user) => {
+        adminUser = user
+        done()
+      })
     })
   })
 
@@ -32,7 +46,8 @@ describe("Projects", () => {
         summary: "Summary",
         details: "Details"
       }
-      chai.request(app).post("/api/projects").send(project).end((err, res) => {
+      let token = jwt.sign({_id: adminUser._id, email: adminUser.email}, config.secret, { expiresIn: 86400 })
+      chai.request(app).post("/api/projects").set("Authorization", `JWT ${token}`).send(project).end((err, res) => {
         res.should.have.status(200)
         res.body.should.be.an("object")
         done()
@@ -44,7 +59,8 @@ describe("Projects", () => {
         summary: "Summary",
         details: "Details"
       }
-      chai.request(app).post("/api/projects").send(project).end((err, res) => {
+      let token = jwt.sign({_id: adminUser._id, email: adminUser.email}, config.secret, { expiresIn: 86400 })
+      chai.request(app).post("/api/projects").set("Authorization", `JWT ${token}`).send(project).end((err, res) => {
         res.should.have.status(200)
         res.body.should.be.an("object")
         res.body.should.have.property("errors")
