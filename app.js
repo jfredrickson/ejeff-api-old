@@ -4,9 +4,7 @@ const bodyParser = require("body-parser")
 
 const app = express()
 
-const port = process.env.PORT || 3000
-const dbUrl = process.env.DATABASE_URL || "mongodb://localhost/ejeff"
-
+const config = require("./config/config")
 const projectController = require("./controllers/project")
 const authController = require("./controllers/auth")
 const authService = require("./services/auth")
@@ -26,12 +24,12 @@ app.use("/api", api)
 app.use("/auth", auth)
 
 mongoose.Promise = global.Promise
-mongoose.connect(dbUrl, (err, db) => {
+mongoose.connect(config.databaseUrl, (err, db) => {
   if (!err) console.log("Connected to MongoDB")
 })
 
-app.listen(port, () => {
-  console.log("Listening on port", port)
+app.listen(config.port, () => {
+  console.log(`Listening on port ${config.port} (environment: ${config.env})`)
 })
 
 module.exports = app
