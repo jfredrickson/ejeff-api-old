@@ -28,8 +28,8 @@ mongoose.connect(config.databaseUrl, (err, db) => {
   if (!err) console.log("Connected to MongoDB")
 })
 
-app.listen(config.port, () => {
-  console.log(`Listening on port ${config.port} (environment: ${config.env})`)
+let server = app.listen(config.port, () => {
+  console.log(`Listening on port ${server.address().port} (environment: ${config.env})`)
 })
 
 module.exports = app
