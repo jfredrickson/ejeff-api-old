@@ -42,7 +42,6 @@ describe("Projects", () => {
     it("should add a project", (done) => {
       let project = {
         title: "Title",
-        wat: "why",
         summary: "Summary",
         details: "Details"
       }
